@@ -1,0 +1,17 @@
+:root {
+  --font-family: SPD;
+  --primary-color: #1948a6;
+  --border-active-color: #1948a6;
+}
+
+ 
+@keyframes cloudAnimation {
+  0% {transform:translate(-50%, -50%)}
+  50% {transform:translate(0%, -50%)}
+  100% {transform:translate(-50%, -50%)}
+}
+@keyframes birdAnimation {
+  0% {transform:translate(10%, -50%)}
+  50% {transform:translate(30%, -30%)}
+  100% {transform:translate(10%, -50%)}
+}
