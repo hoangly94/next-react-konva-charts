@@ -1,11 +1,11 @@
 import type { AppProps } from 'next/app'
-import '~styles/fonts.css';
+import 'src/styles/fonts.css';
 import 'sezy-design/css/variables.css';
 import 'sezy-design/css/default.css';
-import '~styles/variables.css';
-import '~styles/default.css';
+import 'src/styles/variables.css';
+import 'src/styles/default.css';
 import { Provider } from 'react-redux';
-import store from '~store';
+import store from 'src/store';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

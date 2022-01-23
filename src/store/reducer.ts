@@ -1,5 +1,5 @@
 
-import chart from './modules/chart/slice';
+import candlestick from './modules/charts/Candlestick/slice';
 export default {
-    chart
+    candlestick
 }

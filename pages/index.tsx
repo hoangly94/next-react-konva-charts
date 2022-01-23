@@ -1,14 +1,16 @@
+import React from 'react'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import dynamic from "next/dynamic";
 
-const Candlestick = dynamic(() => import('~components/charts/Candlestick'), {
+const Candlestick = dynamic(() => import('src/components/charts/Candlestick'), {
   ssr: false,
 });
 
 const Home: NextPage = () => {
   return (
-    <Candlestick />
+    <>
+      <Candlestick />
+    </>
   )
 }
 

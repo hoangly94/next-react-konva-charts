@@ -21,21 +21,6 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "~utils": ["src/utils/index"],
-      "~hooks": ["src/hooks/index"],
-      "~components/*": ["src/components/*"],
-      // "~utils/*": ["utils/*"],
-      "~types": ["src/store/types"],
-      "~interfaces": ["src/store/interfaces"],
-      "~pages/*": ["pages/*"],
-      "~store": ["src/store/index"],
-      "~store/*": ["src/store/*"],
-      "~reducer/*": ["store/modules/*"],
-      "~api": ["src/store/api/index"],
-      "~service": ["src/store/services/index"],
-      "~services/*": ["src/store/services/*"],
-      "~breakpoints": ["src/styles/breakpoints"],
-      "~styles/*": ["src/styles/*"],
     }
   },
   "include": [

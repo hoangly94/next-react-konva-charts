@@ -1,7 +1,5 @@
-import tuVanCoPhieuAPI from './tuVanCoPhieu';
-import tickerAPi from './ticker';
+import binanceAPi from './binance';
 
 export {
-    tuVanCoPhieuAPI,
-    tickerAPi
+    binanceAPi,
 };
