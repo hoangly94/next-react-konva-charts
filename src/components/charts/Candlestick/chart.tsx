@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash';
-import { Layer, Line, Stage } from "react-konva";
+import { Group, Layer, Line, Rect, Stage } from "react-konva";
 // import CoordinateSystem from './CoordinateSystem';
 import { IElementDimensions } from 'src/interfaces';
 import { SStage } from './styled';
@@ -23,17 +23,17 @@ const Candlestick = ({
     const xData = convertXAxisLabelPosition(shownData, itemRange, interval, width, 10);
     const yData = findYLabels(shownData, height, 10);
 
-    const data = xData.length && yData.length && convertChartData(xData, yData, shownData, itemRange, width, height);
+    const data = xData.length && yData.length && convertChartData(xData, yData, shownData, itemRange, interval, width, height);
     console.log('==========');
+    console.log(shownData);
     console.log(xData);
-    console.log(yData);
+    console.log(data);
+    // console.log(yData);
     return (
         <SStage
             ref={wrapperRef}
             width={width}
             height={height}
-            y={dimensions?.offsetHeight}
-            scaleY={-1}
         >
             <Layer>
                 {
@@ -61,6 +61,28 @@ const Candlestick = ({
                         stroke='#e8e8e8'
                         strokeWidth={1}
                     />)
+                }
+                {
+                    !!data && data.map((d, index) => <Group
+                        key={`stick.${index}`}>
+                        <Line
+                            points={[
+                                d.line.x,
+                                d.line.y1,
+                                d.line.x,
+                                d.line.y2
+                            ]}
+                            stroke={d.line.color}
+                            strokeWidth={1}
+                        />
+                        <Rect
+                            x={d.rect.x}
+                            y={d.rect.y}
+                            width={d.rect.width}
+                            height={d.rect.height}
+                            fill={d.rect.color}
+                        />
+                    </Group>)
                 }
             </Layer>
         </SStage>

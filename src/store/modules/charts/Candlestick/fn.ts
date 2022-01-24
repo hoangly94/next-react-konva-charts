@@ -6,10 +6,10 @@ export const convertData = (array: string[]) => {
     const [time, open, high, low, close] = array;
     const result: TCandlestickData = {
         time: parseInt(time) / 1000,
-        open: parseInt(open),
-        high: parseInt(high),
-        low: parseInt(low),
-        close: parseInt(close)
+        open: parseFloat(open),
+        high: parseFloat(high),
+        low: parseFloat(low),
+        close: parseFloat(close)
     }
     return result
 }
@@ -81,7 +81,6 @@ export const convertXAxisLabelPosition: any = (shownData: TCandlestickData[], it
     const labelWidth = width && width / data.reduce((total, next) => {
         return total + next.width;
     }, 0);
-    const timeFormat = mapIntervalToLabelTimeType(interval, 0);
 
     let x = 0;
     return data.map((v, i) => {
@@ -89,7 +88,7 @@ export const convertXAxisLabelPosition: any = (shownData: TCandlestickData[], it
         const d = {
             x,
             centerPoint: x + w / 2,
-            text: moment.unix(+v.data).format(timeFormat),
+            data: +v.data,
             width: w,
         }
         x += w;
@@ -136,9 +135,9 @@ export const mapIntervalToLabelTimeType = (interval: TInterval, times) => {
 export const findYLabels: any = (shownData: TCandlestickData[], height: number, amount: number) => {
     if (!height)
         return [];
-
     const [min, max] = findMinMax(shownData);
-    const delta = max - min;
+    const niceMin = min < 0 ? min : Math.floor(min);
+    const delta = max - niceMin;
     const range = delta / amount;
     const rangeValue = Math.ceil(range) || range;
     const labelHeight = height / (amount + 2);
@@ -148,20 +147,62 @@ export const findYLabels: any = (shownData: TCandlestickData[], height: number, 
             y,
             centerPoint: y + labelHeight / 2,
             height: labelHeight,
-            data: min + rangeValue * v
+            data: niceMin + rangeValue * v
         }
     })
 }
 
+const STICK_SPACING = 0.1;
+export const convertChartData = (xData, yData, shownData: TCandlestickData[], itemRange: TItemRange, interval: TInterval, width: number, height: number) => {
+    const yHeightPerUnit = calculateYHeightPerUnit(yData, height);
+    const xWidthPerUnit = calculateXWidthtPerUnit(itemRange, width);
+    const firstXPointPosition = width - xData[0].width;
+    const firstXTimeData = xData[1].data;
+    const timeDivisor = mapIntervalToTime(interval);
+    const firstYData = yData[0].data;
+    // console.log(yHeightPerUnit);
+    return shownData.map(d => {
+        const x = xWidthPerUnit * (d.time - firstXTimeData) / timeDivisor;
 
-export const convertChartData = (xData, yData, shownData: TCandlestickData[], itemRange: TItemRange, width: number, height: number) => {
-    const deltaYLabelRange = yData[1].data - yData[0].data;
-    const minYPointData = yData[0].data - deltaYLabelRange / 2;
-    const maxYPointData = yData[yData.length - 1].data + deltaYLabelRange / 2;
+        const yHigh = ((d.high - firstYData) + 0.5) * yHeightPerUnit;
+        const yLow = ((d.low - firstYData) + 0.5) * yHeightPerUnit;
+        const yOpen = ((d.open - firstYData) + 0.5) * yHeightPerUnit;
+        const yClose = ((d.close - firstYData) + 0.5) * yHeightPerUnit;
+        const stickDirection = !(yOpen < yClose);
+        const yBody = height - (stickDirection ? yOpen : yClose);
+        const color = stickDirection ? 'red' : 'green';
+        const rect = {
+            x: x + (xWidthPerUnit / 2) * STICK_SPACING,
+            xCenterPoint: x + (xWidthPerUnit / 2),
+            width: xWidthPerUnit * (1 - STICK_SPACING),
+            y: height - (stickDirection ? yOpen : yClose),
+            // yCenterPoint: y + (yHeightPerUnit / 2),
+            height: Math.abs(yOpen - yClose),
+            color
+        }
+        const line = {
+            x: x + (xWidthPerUnit / 2),
+            y1: height - yHigh,
+            y2: height - yLow,
+            color
+        }
+        return {
+            rect,
+            line,
+        }
+    });
+}
 
-    const deltaYData = maxYPointData - minYPointData;
-    console.log('--------------');
-    console.log(yData);
-    console.log(deltaYLabelRange);
-    console.log(deltaYData);
+const calculateYHeightPerUnit = (yData, height: number) => {
+    const deltaRange = yData[1].data - yData[0].data;
+    const min = yData[0].data - deltaRange / 2;
+    const max = yData[yData.length - 1].data + deltaRange / 2;
+
+    const delta = max - min;
+    return height / delta;
+}
+
+const calculateXWidthtPerUnit = (itemRange: TItemRange, width: number) => {
+    const delta = itemRange.max - itemRange.min;
+    return width / delta;
 }

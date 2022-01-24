@@ -22,7 +22,9 @@ const XAsis = ({
     const height = dimensions?.offsetHeight || 0;
 
     const labels = convertXAxisLabelPosition(shownData, itemRange, interval, width, 10);
-    
+
+    const timeFormat = mapIntervalToLabelTimeType(interval, 0);
+
     return (
         <SStageXAsis
             ref={wrapperRef}
@@ -35,7 +37,7 @@ const XAsis = ({
                         <Text
                             key={`xAxisl.label.${index}`}
                             x={label.x}
-                            text={label.text}
+                            text={moment.unix(label.data).format(timeFormat)}
                             fontSize={15}
                             fill='#484848'
                             align='center'
