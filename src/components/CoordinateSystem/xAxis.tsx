@@ -4,6 +4,9 @@ import _ from 'lodash';
 import { SStageXAsis } from './styled';
 import { parseDimensions } from 'src/utils';
 import { AppState } from 'src/store';
+import { convertXAxisLabelPosition, findXLabels, mapIntervalToLabelTimeType } from 'src/store/modules/charts/Candlestick/fn';
+import { Layer, Text } from 'react-konva';
+import moment from 'moment';
 
 interface IProps {
     state: AppState
@@ -12,20 +15,37 @@ interface IProps {
 const XAsis = ({
     state
 }: IProps) => {
+    const { itemRange, interval, shownData } = state.candlestick;
     const wrapperRef = React.useRef(null);
     const dimensions = parseDimensions(wrapperRef);
+    const width = dimensions?.offsetWidth || 0;
+    const height = dimensions?.offsetHeight || 0;
+
+    const labels = convertXAxisLabelPosition(shownData, itemRange, interval, width, 10);
+    
     return (
         <SStageXAsis
             ref={wrapperRef}
-            width={dimensions?.offsetWidth}
-            height={dimensions?.offsetHeight}
-            y={dimensions?.offsetHeight}
-            scaleY={-1}
+            width={width}
+            height={height}
         >
-            {/* <CoordinateSystem
-                state={coordinatesState}
-                dimensions={dimensions}
-            /> */}
+            <Layer>
+                {
+                    labels?.map((label, index) =>
+                        <Text
+                            key={`xAxisl.label.${index}`}
+                            x={label.x}
+                            text={label.text}
+                            fontSize={15}
+                            fill='#484848'
+                            align='center'
+                            verticalAlign='middle'
+                            width={label.width}
+                            height={40}
+                        />
+                    )
+                }
+            </Layer>
         </SStageXAsis>
     )
 }

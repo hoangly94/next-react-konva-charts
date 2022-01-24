@@ -14,12 +14,12 @@ const Candlestick = () => {
         dispatch(fetchData({}))
     }, []);
 
-    const wrapperRef = React.useRef(null);
     const state = useAppSelector(state => state);
+    
     return (
         <SWrapper>
             <Chart
-
+                state={state}
             />
             <YAxis
                 state={state}

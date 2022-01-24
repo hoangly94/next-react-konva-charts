@@ -5,7 +5,7 @@ import { TCandlestickData, ICandlestickState } from './interface';
 const initialState: ICandlestickState = {
   isLoading: false,
   symbol: 'SOLUSDT',
-  interval: '5m',
+  interval: '30m',
   limit: '10',
   data: [],
   shownData: [],

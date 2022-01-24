@@ -3,10 +3,9 @@ import { binanceAPi } from 'src/store/api';
 import Service from 'src/store/service';
 import { fetchData, setData } from "./slice"
 import { takeLatest, put, select } from 'redux-saga/effects';
-import { convertData, findMinMax } from './fn';
+import { convertData, findMinMax, findXLabelRange } from './fn';
 import { ICandlestickState } from './interface';
 
-const timeGroup = [1];
 function* fetchDataSaga({ payload }) {
     const state: ICandlestickState = yield select(state => state.candlestick);
     const params = new URLSearchParams({
@@ -24,24 +23,19 @@ function* fetchDataSaga({ payload }) {
 
     const itemRange = {
         min: data.length - 5,
-        max: data.length - 1,
+        max: data.length,
     };
 
-    const shownData = data.slice(itemRange.min, itemRange.max + 1)
+    const shownData = data.slice(Math.ceil(itemRange.min), Math.floor(itemRange.max))
 
     const [min, max] = findMinMax(shownData);
-    
-    const shownDeltaTime = shownData[shownData.length-1].time - shownData[0].time;
-    
-    const xAxisData = 
 
     yield put(setData({
         data,
         itemRange,
         shownData,
         x: {
-            min: 0,
-            max: 0,
+            // data: xAxisData,
         },
         y: {
             min: min,

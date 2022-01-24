@@ -1,14 +1,11 @@
 export interface ICandlestickState {
     isLoading: Boolean,
     symbol: string,
-    interval: string,
+    interval: TInterval,
     limit: string,
     data: TCandlestickData[],
     shownData: TCandlestickData[],
-    itemRange: {
-        min: number,
-        max: number,
-    },
+    itemRange: TItemRange,
     xAxis: {
         // data: .
     },
@@ -26,3 +23,11 @@ export type TCandlestickData = {
     low: number,
     close: number,
 }
+
+
+
+export type TInterval = '1m' | '5m' | '30m' | '1h' | '1d';
+export type TItemRange = {
+    min: number,
+    max: number,
+};
