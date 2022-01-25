@@ -4,3 +4,6 @@ body{
 #__next{
   height:100%;
 }
+canvas{
+  font-smooth: never;
+}

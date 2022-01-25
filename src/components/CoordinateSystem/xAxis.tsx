@@ -25,14 +25,16 @@ const XAsis = () => {
     React.useEffect(() => {
         dispatch(setCoordinatesXAxisData(xAxisData));
     }, [xAxisData]);
-    // console.log(xAxisData)
+    console.log(xAxisData)
     return (
         <SStageXAsis
             ref={wrapperRef}
             width={width}
             height={height}
         >
-            <Layer>
+            <Layer
+                pixelRatio={2}
+            >
                 {
                     xAxisData?.map((label, index) =>
                         <Text
@@ -40,7 +42,7 @@ const XAsis = () => {
                             x={label.x}
                             text={moment.unix(label.data).format(timeFormat)}
                             fontSize={15}
-                            fill='#484848'
+                            fill='#383838'
                             align='center'
                             verticalAlign='middle'
                             width={label.width}

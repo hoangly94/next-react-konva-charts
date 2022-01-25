@@ -1,12 +1,12 @@
 import React from 'react'
 import _ from 'lodash';
 import { Group, Layer, Line, Rect, Stage } from "react-konva";
-// import CoordinateSystem from './CoordinateSystem';
 import { SStage } from './styled';
-import { convertChartData, convertXAxisLabelPosition, findYLabels } from '~store/modules/charts/Candlestick/fn';
-import { AppState } from '~store';
+import { convertChartData } from '~store/modules/charts/Candlestick/fn';
 import { useAppSelector } from '~hooks';
 import { useDimensions } from 'sezy-design/hooks';
+import Konva from 'konva';
+Konva.pixelRatio = 1;
 
 const Candlestick = () => {
     const wrapperRef = React.useRef(null);
@@ -19,10 +19,10 @@ const Candlestick = () => {
 
     const data = xAxisData && yAxisData && convertChartData(xAxisData, yAxisData, shownData, itemRange, interval, width, height);
 
-    // console.log('==========');
+    console.log('==========');
     // console.log(shownData);
     // console.log(xData);
-    // console.log(data);
+    console.log(data);
     // console.log(width);
     // console.log(height);
     // console.log(yData);
@@ -31,6 +31,7 @@ const Candlestick = () => {
             ref={wrapperRef}
             width={width}
             height={height}
+            pixelRatio={2}
         >
             <Layer>
                 {

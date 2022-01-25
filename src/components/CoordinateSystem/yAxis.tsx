@@ -24,8 +24,7 @@ const YAsis = () => {
             ref={wrapperRef}
             width={width}
             height={height}
-        // y={height}
-        // scaleY={-1}
+            pixelRatio={2}
         >
             <Layer>
                 {
@@ -35,7 +34,7 @@ const YAsis = () => {
                             y={label.y}
                             text={label.data ? label.data.toFixed(2) : ''}
                             fontSize={15}
-                            fill='#484848'
+                            fill='black'
                             align='center'
                             verticalAlign='middle'
                             width={80}

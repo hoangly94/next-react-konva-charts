@@ -24,7 +24,8 @@ const Candlestick = () => {
     
     React.useEffect(() => {
         //fetch first data
-        dispatch(fetchData())
+        dispatch(fetchData());
+        window.devicePixelRatio = 1.0;
     }, []);
 
     return (

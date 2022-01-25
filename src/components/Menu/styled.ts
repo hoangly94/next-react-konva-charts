@@ -13,7 +13,7 @@ export const SMenu = styled.div`
     &>div:first-child{
         
         display:flex;
-        width:80%;
+        width:calc(100% - 80px);
     }
 `;
 
@@ -38,7 +38,7 @@ export const SIntervalButton = styled.div`
     justify-content:space-between;
     border-right: 1px solid var(--border-color);
     padding: 0 18px;
-    width:300px;
+    width:400px;
 
     &>button{
         width:18%;

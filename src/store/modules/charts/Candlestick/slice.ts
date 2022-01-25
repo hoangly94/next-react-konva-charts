@@ -15,7 +15,7 @@ const initialState: ICandlestickState = {
       isLoading: false
     },
     limit: {
-      value: 500,
+      value: 10,
       isLoading: false
     },
   },
