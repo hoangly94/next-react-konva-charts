@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import moment from 'moment';
-import { gcd } from 'src/utils';
-import { TCandlestickData, TInterval, TItemRange } from './interface';
+import { TInterval } from '~interfaces';
+import { gcd } from '~utils';
+import { TCandlestickData, TItemRange } from './interface';
 export const convertData = (array: string[]) => {
     const [time, open, high, low, close] = array;
     const result: TCandlestickData = {
@@ -27,38 +28,21 @@ const reduceMinMax = (prev: number[], next: TCandlestickData) => {
     ];
 }
 
-export const findXLabelRange = (deltaRange: number, counter: number) => {
-    let i = counter;
-    do {
-        if (deltaRange < i)
-            continue;
-        return gcd(deltaRange, i);
-    } while (--i);
-
-}
-
 export const findXLabels = (shownData: TCandlestickData[], itemRange: TItemRange, interval: TInterval, amount: number) => {
     const deltaRange = Math.floor(itemRange.max) - Math.ceil(itemRange.min);
-    const range = findXLabelRange(deltaRange, amount);
+    const range = deltaRange < amount ? deltaRange : amount;
     const minPointDecimal = _.ceil(itemRange.min) - itemRange.min;
     const maxPointDecimal = itemRange.max % 1;
-
-    const minPoint = Math.ceil(itemRange.min);
-    const maxPoint = Math.floor(itemRange.max);
 
     const deltaTime = (deltaRange / range) * mapIntervalToTime(interval);
 
     if (!deltaTime)
         return [];
     const minTimeLabel = shownData[+!!minPointDecimal].time;
-
-    const mainLabels = _.range(minPoint, maxPoint).map((v, i) => ({
+    const mainLabels = _.range(0, range).map((v, i) => ({
         width: 1,
         data: minTimeLabel + i * deltaTime
     }))
-    // console.log(shownData);
-    // console.log(minTimeLabel);
-    // console.log(deltaTime);
 
     return [
         {
@@ -75,7 +59,7 @@ export const findXLabels = (shownData: TCandlestickData[], itemRange: TItemRange
 
 export const convertXAxisLabelPosition: any = (shownData: TCandlestickData[], itemRange: TItemRange, interval: TInterval, width: number, amount: number) => {
     if (!width)
-        return [];
+        return;
 
     const data = findXLabels(shownData, itemRange, interval, amount);
     const labelWidth = width && width / data.reduce((total, next) => {
@@ -125,7 +109,7 @@ export const mapIntervalToLabelTimeType = (interval: TInterval, times) => {
         case '1h':
             return 'hh:mm';
         case '1d':
-            return 'hh:mm';
+            return 'DD-MM';
         default:
             return 'hh:mm';
     }
@@ -134,7 +118,7 @@ export const mapIntervalToLabelTimeType = (interval: TInterval, times) => {
 
 export const findYLabels: any = (shownData: TCandlestickData[], height: number, amount: number) => {
     if (!height)
-        return [];
+        return;
     const [min, max] = findMinMax(shownData);
     const niceMin = min < 0 ? min : Math.floor(min);
     const delta = max - niceMin;
@@ -154,13 +138,15 @@ export const findYLabels: any = (shownData: TCandlestickData[], height: number, 
 
 const STICK_SPACING = 0.1;
 export const convertChartData = (xData, yData, shownData: TCandlestickData[], itemRange: TItemRange, interval: TInterval, width: number, height: number) => {
+    if (!width || !height || !xData || !yData || !xData.length || !yData.length)
+        return;
     const yHeightPerUnit = calculateYHeightPerUnit(yData, height);
     const xWidthPerUnit = calculateXWidthtPerUnit(itemRange, width);
     const firstXPointPosition = width - xData[0].width;
     const firstXTimeData = xData[1].data;
     const timeDivisor = mapIntervalToTime(interval);
     const firstYData = yData[0].data;
-    // console.log(yHeightPerUnit);
+
     return shownData.map(d => {
         const x = xWidthPerUnit * (d.time - firstXTimeData) / timeDivisor;
 
@@ -176,7 +162,6 @@ export const convertChartData = (xData, yData, shownData: TCandlestickData[], it
             xCenterPoint: x + (xWidthPerUnit / 2),
             width: xWidthPerUnit * (1 - STICK_SPACING),
             y: height - (stickDirection ? yOpen : yClose),
-            // yCenterPoint: y + (yHeightPerUnit / 2),
             height: Math.abs(yOpen - yClose),
             color
         }
@@ -205,4 +190,10 @@ const calculateYHeightPerUnit = (yData, height: number) => {
 const calculateXWidthtPerUnit = (itemRange: TItemRange, width: number) => {
     const delta = itemRange.max - itemRange.min;
     return width / delta;
+}
+
+
+export const calculateZoomValue = (zoom, value, max = 2, min = 0) => {
+    const newZoom = +parseFloat(zoom + value).toFixed(3);
+    return newZoom < min ? min : newZoom > max ? max : newZoom;
 }

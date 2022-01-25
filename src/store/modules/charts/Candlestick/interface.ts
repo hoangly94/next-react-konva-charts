@@ -1,19 +1,43 @@
+import { IFilter } from '~interfaces';
+
 export interface ICandlestickState {
     isLoading: Boolean,
-    symbol: string,
-    interval: TInterval,
-    limit: string,
+    filter: IFilter,
     data: TCandlestickData[],
     shownData: TCandlestickData[],
     itemRange: TItemRange,
-    xAxis: {
-        // data: .
-    },
-    yAxis: {
-        min: number,
-        max: number,
-    },
+    xAxis: IXAxis,
+    yAxis: IYAxis,
+    zoom: IZoom
+}
+export interface IXAxis {
+    data: IXAxisData[],
     zoom: number,
+}
+export interface IXAxisData {
+    x: number,
+    centerPoint: number,
+    data: number,
+    text: string,
+    width: number,
+}
+
+export interface IYAxis {
+    data: IYAxisData[],
+    zoom: number,
+}
+
+export interface IYAxisData {
+    y: number,
+    centerPoint: number,
+    data: number,
+    text: string,
+    height: number,
+}
+
+export interface IZoom {
+    x: number,
+    y: number,
 }
 
 export type TCandlestickData = {
@@ -25,8 +49,6 @@ export type TCandlestickData = {
 }
 
 
-
-export type TInterval = '1m' | '5m' | '30m' | '1h' | '1d';
 export type TItemRange = {
     min: number,
     max: number,

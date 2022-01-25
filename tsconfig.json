@@ -21,6 +21,22 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
+      "~utils": ["src/utils/index"],
+      "~utils/*": ["utils/*"],
+      "~hooks": ["src/hooks/index"],
+      "~components/*": ["src/components/*"],
+      "~types": ["src/store/types"],
+      "~interfaces": ["src/interfaces/index"],
+      "~interfaces/*": ["src/interfaces/*"],
+      "~pages/*": ["pages/*"],
+      "~store": ["src/store/index"],
+      "~store/*": ["src/store/*"],
+      "~reducer/*": ["store/modules/*"],
+      "~api": ["src/store/api/index"],
+      "~service": ["src/store/services/index"],
+      "~services/*": ["src/store/services/*"],
+      "~breakpoints": ["src/styles/breakpoints"],
+      "~styles/*": ["src/styles/*"],
     }
   },
   "include": [

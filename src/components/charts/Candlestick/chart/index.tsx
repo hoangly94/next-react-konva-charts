@@ -2,32 +2,29 @@ import React from 'react'
 import _ from 'lodash';
 import { Group, Layer, Line, Rect, Stage } from "react-konva";
 // import CoordinateSystem from './CoordinateSystem';
-import { IElementDimensions } from 'src/interfaces';
 import { SStage } from './styled';
-import { convertChartData, convertXAxisLabelPosition, findYLabels } from 'src/store/modules/charts/Candlestick/fn';
-import { AppState } from 'src/store';
+import { convertChartData, convertXAxisLabelPosition, findYLabels } from '~store/modules/charts/Candlestick/fn';
+import { AppState } from '~store';
+import { useAppSelector } from '~hooks';
+import { useDimensions } from 'sezy-design/hooks';
 
-interface IProps {
-    state: AppState
-}
-const Candlestick = ({
-    state
-}: IProps) => {
-    const { itemRange, interval, shownData } = state.candlestick;
+const Candlestick = () => {
     const wrapperRef = React.useRef(null);
-    const dimensions = parseDimensions(wrapperRef);
+    const { offsetWidth: width, offsetHeight: height } = useDimensions(wrapperRef);
+    const itemRange = useAppSelector(state => state.candlestick.itemRange);
+    const interval = useAppSelector(state => state.candlestick.filter.interval.value);
+    const shownData = useAppSelector(state => state.candlestick.shownData);
+    const xAxisData = useAppSelector(state => state.candlestick.xAxis?.data);
+    const yAxisData = useAppSelector(state => state.candlestick.yAxis?.data);
 
+    const data = xAxisData && yAxisData && convertChartData(xAxisData, yAxisData, shownData, itemRange, interval, width, height);
 
-    const width = dimensions?.offsetWidth || 0;
-    const height = dimensions?.offsetHeight || 0;
-    const xData = convertXAxisLabelPosition(shownData, itemRange, interval, width, 10);
-    const yData = findYLabels(shownData, height, 10);
-
-    const data = xData.length && yData.length && convertChartData(xData, yData, shownData, itemRange, interval, width, height);
-    console.log('==========');
-    console.log(shownData);
-    console.log(xData);
-    console.log(data);
+    // console.log('==========');
+    // console.log(shownData);
+    // console.log(xData);
+    // console.log(data);
+    // console.log(width);
+    // console.log(height);
     // console.log(yData);
     return (
         <SStage
@@ -37,7 +34,7 @@ const Candlestick = ({
         >
             <Layer>
                 {
-                    xData.map((d, index) => <Line
+                    xAxisData?.map((d, index) => <Line
                         key={`x.grid.${index}`}
                         points={[
                             d.centerPoint,
@@ -50,7 +47,7 @@ const Candlestick = ({
                     />)
                 }
                 {
-                    yData.map((d, index) => <Line
+                    yAxisData?.map((d, index) => <Line
                         key={`y.grid.${index}`}
                         points={[
                             0,
@@ -87,18 +84,6 @@ const Candlestick = ({
             </Layer>
         </SStage>
     )
-}
-const parseDimensions = (wrapperRef) => {
-    const element = wrapperRef.current?.attrs?.container;
-    if (!element)
-        return;
-    const dimensions: IElementDimensions = {
-        offsetWidth: element.offsetWidth,
-        offsetHeight: element.offsetHeight,
-        offsetLeft: element.offsetLeft,
-        offsetTop: element.offsetTop,
-    };
-    return dimensions;
 }
 
 export default Candlestick

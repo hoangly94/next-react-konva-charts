@@ -1,46 +1,48 @@
 
-import { binanceAPi } from 'src/store/api';
-import Service from 'src/store/service';
+import { binanceAPi } from '~store/api';
+import Service from '~store/service';
 import { fetchData, setData } from "./slice"
 import { takeLatest, put, select } from 'redux-saga/effects';
-import { convertData, findMinMax, findXLabelRange } from './fn';
-import { ICandlestickState } from './interface';
+import { convertData, convertXAxisLabelPosition, findMinMax, mapIntervalToLabelTimeType } from './fn';
+import { IFilter } from '~interfaces';
 
-function* fetchDataSaga({ payload }) {
-    const state: ICandlestickState = yield select(state => state.candlestick);
+function* fetchDataSaga() {
+    const filter: IFilter = yield select(state => state.candlestick.filter);
     const params = new URLSearchParams({
-        symbol: state.symbol,
-        interval: state.interval,
-        limit: state.limit
+        symbol: filter.symbol.value,
+        interval: filter.interval.value,
+        limit: '' + filter.limit.value
     });
 
     const data = yield Service.get<string[][]>(binanceAPi.candlestickData, { params })
         .then(res => res.data.map(convertData))
         .catch(error => console.log(error));
 
-    if (!data)
-        return;
+    if (!data) {
+        return yield put(setData({
+            data,
+            itemRange: [],
+            shownData: [],
+            // xAxis:{
+            //     data: xAxisData
+            // },
+        }));
+    }
 
     const itemRange = {
-        min: data.length - 5,
+        min: 0,
         max: data.length,
     };
-
     const shownData = data.slice(Math.ceil(itemRange.min), Math.floor(itemRange.max))
-
-    const [min, max] = findMinMax(shownData);
+    // const [min, max] = findMinMax(shownData);
 
     yield put(setData({
         data,
         itemRange,
         shownData,
-        x: {
-            // data: xAxisData,
-        },
-        y: {
-            min: min,
-            max: max,
-        },
+        // xAxis:{
+        //     data: xAxisData
+        // },
     }));
 }
 
