@@ -7,7 +7,7 @@ export const SWrapper = styled.div`
     transform:translate(-50%,-50%);
     line-height:0;
     box-sizing:border-box;
-    width:80%;
+    width:1000px;
     height:60%;
     border: 1px solid var(--border-color);
 `;

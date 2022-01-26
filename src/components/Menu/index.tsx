@@ -4,8 +4,8 @@ import { SIntervalButton, SLimitInput, SMenu, SOther, SSymbolInput, SZoomButtons
 import { useAppDispatch, useAppSelector } from '~hooks';
 import { fetchData, setCoordinatesZoom, setIntervalFilter, setLimitFilter, setSymbolFilter } from '~store/modules/charts/Candlestick/slice';
 import { Button, Input } from 'sezy-design';
-import ZoomInIcon from 'sezy-design/components/icon/solid/bars';
-import ZoomOutIcon from 'sezy-design/components/icon/solid/bars';
+import ZoomInIcon from 'sezy-design/components/icon/solid/minus';
+import ZoomOutIcon from 'sezy-design/components/icon/solid/plus';
 import OtherIcon from 'sezy-design/components/icon/solid/bars';
 
 const Menu = () => {
@@ -16,7 +16,7 @@ const Menu = () => {
     const intervalFilter = useAppSelector(state => state.candlestick.filter.interval);
     const limitFilter = useAppSelector(state => state.candlestick.filter.limit);
     const zoom = useAppSelector(state => state.candlestick.xAxis.zoom);
-    console.log(zoom);
+
     React.useEffect(() => {
         symbolRef.current.value = symbolFilter.value;
         limitRef.current.value = limitFilter.value;
@@ -29,9 +29,6 @@ const Menu = () => {
                     <Input
                         ref={symbolRef}
                         placeholder={symbolRef?.current ? 'Symbol...' : ''}
-                        // onChange={v=>{
-                        //     console.log(v.value);
-                        // }}
                         onBlur={element => {
                             dispatch(setSymbolFilter(element.value));
                             dispatch(fetchData());
@@ -94,9 +91,11 @@ const Menu = () => {
                 </SLimitInput>
                 <SZoomButtons>
                     <ZoomInIcon
+                        size='l1'
                         onClick={() => dispatch(setCoordinatesZoom({ value: -0.1 }))}
                     />
                     <ZoomOutIcon
+                        size='l1'
                         onClick={() => dispatch(setCoordinatesZoom({ value: 0.1 }))}
                     />
                 </SZoomButtons>

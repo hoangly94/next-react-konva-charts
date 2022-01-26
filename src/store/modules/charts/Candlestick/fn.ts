@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import moment from 'moment';
 import { TInterval } from '~interfaces';
-import { gcd } from '~utils';
 import { TCandlestickData, TItemRange } from './interface';
+
 export const convertData = (array: string[]) => {
     const [time, open, high, low, close] = array;
     const result: TCandlestickData = {

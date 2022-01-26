@@ -19,13 +19,6 @@ const Candlestick = () => {
 
     const data = xAxisData && yAxisData && convertChartData(xAxisData, yAxisData, shownData, itemRange, interval, width, height);
 
-    console.log('==========');
-    // console.log(shownData);
-    // console.log(xData);
-    console.log(data);
-    // console.log(width);
-    // console.log(height);
-    // console.log(yData);
     return (
         <SStage
             ref={wrapperRef}

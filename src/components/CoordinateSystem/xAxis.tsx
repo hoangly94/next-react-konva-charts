@@ -25,7 +25,7 @@ const XAsis = () => {
     React.useEffect(() => {
         dispatch(setCoordinatesXAxisData(xAxisData));
     }, [xAxisData]);
-    console.log(xAxisData)
+
     return (
         <SStageXAsis
             ref={wrapperRef}
